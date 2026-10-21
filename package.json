@@ -1,0 +1,37 @@
+{
+  "name": "draw-stuff",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.1",
+  "scripts": {
+    "dev": "pnpm build && wrangler dev",
+    "dev:vite": "vite",
+    "build": "tsc -b && vite build",
+    "test": "tsx --test tests/*.test.ts",
+    "cf:types": "wrangler types",
+    "deploy": "pnpm build && wrangler deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joeltheai/draw-stuff.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joeltheai/draw-stuff/issues"
+  },
+  "homepage": "https://github.com/joeltheai/draw-stuff#readme",
+  "dependencies": {
+    "effect": "^4.0.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261021.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "wrangler": "^4.151.3"
+  }
+}
