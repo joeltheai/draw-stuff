@@ -12,5 +12,10 @@
   "durable_objects": {
     "bindings": [{ "name": "ROOMS", "class_name": "DrawingRoom" }]
   },
+  "previews": {
+    "durable_objects": {
+      "bindings": [{ "name": "ROOMS", "class_name": "DrawingRoom" }]
+    }
+  },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DrawingRoom"] }]
 }

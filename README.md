@@ -28,11 +28,25 @@ The regression tests cover acknowledgements, offline recovery, live previews, pe
 1. Create a Cloudflare account and open **Workers & Pages** in its dashboard. Use the **Workers Free** plan. No paid plan, trial, custom domain, R2 bucket, or D1 database is required.
 2. Authenticate Wrangler with `pnpm exec wrangler login`. Complete Cloudflare's OAuth flow in your browser. Keep credentials out of the repository.
 3. Run `pnpm exec wrangler whoami` to confirm the account. If Wrangler lists several accounts, select the intended account during deployment or add its public `account_id` to `wrangler.jsonc`.
-4. Run `pnpm deploy`. The build uploads the static UI and Worker. Wrangler creates the SQLite-backed Durable Object namespace using the checked-in migration. If prompted, choose a `workers.dev` subdomain.
+4. Run `pnpm run deploy`. The build uploads the static UI and Worker. Wrangler creates the SQLite-backed Durable Object namespace using the checked-in migration. If prompted, choose a `workers.dev` subdomain.
 5. Open the resulting `workers.dev` URL. Add `?room=your-room-name` to share a room. The default room is `lobby`.
 6. Check Workers and Durable Objects usage in the Cloudflare dashboard. Free quotas are shared across this account's applications; requests fail when a quota is exhausted until it resets.
 
 The app uses a single SQLite-backed Durable Object per room. Workers Free currently includes 100,000 Durable Object requests per day; incoming WebSocket messages count at a 20:1 ratio for request billing, and hibernation avoids duration charges while idle. Cloudflare may update plan limits; see [Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/).
+
+## GitHub deployments and previews
+
+Connect the existing `draw-stuff` Worker under **Settings → Builds → Connect** to `joeltheai/draw-stuff`, with `main` as the production branch. Set:
+
+- Build command: `pnpm test && pnpm build`
+- Deploy command: `pnpm exec wrangler deploy`
+- Preview command: `pnpm exec wrangler preview`
+- Root directory: `/`
+- Build variables: `NODE_VERSION=24` and `PNPM_VERSION=11.15.1`
+
+Leave **Enable Preview builds** checked. Pushes to `main` update production; other enabled branches get a separate Preview URL. Each Preview automatically receives its own Durable Object namespace and storage. The `previews.durable_objects` configuration supplies the `ROOMS` binding used by this app. Preview drawings do not share production canvas data; resource usage still counts toward the account's quotas.
+
+Commit and push `wrangler.jsonc` and regenerated `worker-configuration.d.ts` before creating preview branches. See [Cloudflare preview configuration](https://developers.cloudflare.com/workers/previews/configuration/).
 
 ## Alchemy
 
@@ -42,6 +56,8 @@ Application logic uses shared Effect schemas for the wire protocol, Effect servi
 
 ## Notes
 
+- The drawing surface is a fixed 2000 × 2000 CSS pixels on every device. It never stretches to fit the screen. Choose **Draw** to doodle and **Move** to scroll with a finger or drag with a mouse. Mouse wheels, trackpads, and scrollbars also move the viewport.
+- Canvas coordinates remain compatible with existing saved drawings. Drawings created before the fixed-size canvas did not record their original screen dimensions, so their original proportions cannot be recovered automatically.
 - Canvas data is stored in the room's Durable Object SQLite storage and restored on reconnect.
 - Live stroke previews are broadcast at most once per 60 ms batch and are not stored in SQLite. Finished segments are stored once and acknowledged; duplicate retries do not create duplicate strokes.
 - Finished unsynced drawings stay in a per-tab session-storage outbox until acknowledged. They survive reconnects and reloads in that tab. Keep the tab open until it reports **Connected**; closing it can remove its session storage. If browser storage is unavailable or full, the app tells you to keep the tab open.
