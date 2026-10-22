@@ -22,7 +22,7 @@ root.innerHTML = `
       </div>
     </header>
     <div id="viewport" class="canvas-viewport" tabindex="0" aria-label="Drawing area. Choose Move to scroll, or Draw to doodle.">
-      <canvas id="canvas" aria-label="Shared 2000 by 2000 pixel drawing canvas"></canvas>
+      <canvas id="canvas" aria-label="Shared ${CANVAS_WIDTH} by ${CANVAS_HEIGHT} pixel drawing canvas"></canvas>
     </div>
     <div class="connection" aria-live="polite"><i id="connection-dot"></i><span id="connection-label">Connecting</span><span aria-hidden="true">·</span><span><span id="people-count">0</span> here</span></div>
     <div class="toast" id="toast" role="status"></div>

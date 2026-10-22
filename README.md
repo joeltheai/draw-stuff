@@ -56,7 +56,7 @@ Application logic uses shared Effect schemas for the wire protocol, Effect servi
 
 ## Notes
 
-- The drawing surface is a fixed 2000 × 2000 CSS pixels on every device. It never stretches to fit the screen. Choose **Draw** to doodle and **Move** to scroll with a finger or drag with a mouse. Mouse wheels, trackpads, and scrollbars also move the viewport.
+- The drawing surface is a fixed 1000 × 1000 CSS pixels on every device. It never stretches to fit the screen. Choose **Draw** to doodle and **Move** to scroll with a finger or drag with a mouse. Mouse wheels, trackpads, and scrollbars also move the viewport.
 - Canvas coordinates remain compatible with existing saved drawings. Drawings created before the fixed-size canvas did not record their original screen dimensions, so their original proportions cannot be recovered automatically.
 - Canvas data is stored in the room's Durable Object SQLite storage and restored on reconnect.
 - Live stroke previews are broadcast at most once per 60 ms batch and are not stored in SQLite. Finished segments are stored once and acknowledged; duplicate retries do not create duplicate strokes.
